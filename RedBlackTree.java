@@ -441,20 +441,95 @@ public class RedBlackTree{
   // 5 For each node, all paths from the node to descendant leaves contain the same number of black nodes.
   // To receive full credit you must explicitly check for each property! You may not assume anything based on the above implementation (which does ensure all these rules are followed)
   // you may wish to add some helper functions here.
+
   public boolean isRedBlack() {
-	  return false;
+    if (root.color == RED) return false;
+    ArrayList<Node> myList = new ArrayList<Node>();
+    makeList(root, myList);
+    for (int i = 0; i < myList.size(); i++){
+      if (myList.get(i).color == RED && 
+      (myList.get(i).right.color == BLACK || myList.get(i).left.color == BLACK)) return false;
+      // if its red, check its right and left, and if not black, then return false. 
+    }
+    if (numBlackNodes(root) == -1) return false;
+    
+	  return true;
   }
-  
+
+  private int checkBlackHeight(Node node){
+    if (node == null) return 1;
+    int leftHeight = getBlackHeight(node.left)
+    int rightHeight = getBlackHeight(node.left)
+    // not equal
+    if (leftHeight != rightHeight){
+      return //smth
+    }
+    //equal
+    if (leftHeight == rightHeight){
+      return //smth
+    }
+  }
+
+  private void makeList(Node n, ArrayList<Node> nodes){
+    if(n==null) return;
+    makeList(n.left, nodes);
+    nodes.add(n);
+    makeList(n.right, nodes);
+  }
+
   
   //This should return a string of comma separated keys that represents the shortest height path through the tree.
   //Perhaps this would be easier to do with some helper functions?
   public String shortestTruePath() {
-	  return "";
+    ArrayList<Node> nodeList = new ArrayList;
+
+	  return findShortestPath(root, nodeList);
+  }
+
+  private int height(Node node){
+    if (node == null) return -1;
+    if (node.left == null && node.right == null) return 0;
+    if (node.left == null && node.right != null) return height(node.right)+1;
+    if (node.left != null && node.right == null) return height(node.left)+1;
+    return Math.max(height(node.left)+1, height(node.right)+1);
+  }
+
+  private ArrayList<node> minHeight(Node node, ArrayList<Node> nodes){
+    if (node == null) return nodes;
+    if (node.left == null || node.right == null) return nodes;
+    if (node.left.height()<=node.right.height()){
+      return minHeight(node.left, nodes);
+    }
+    return minHeight(node.right, nodes);
+  }
+
+  private int numBlackNodes (Node node){
+    if (node == null) return 1;
+    //if fails rule5 -1 comes all the way up
+    if (numBlackNodes(node.left) == -1) return -1;
+    if (numBlackNodes(node.right) == -1)  return -1;
+    if (numBlackNodes(node.left) != numBlackNodes(node.right)) return -1
+    //can use either b/c know its equal
+    if (node.color == BLACK) return (numBlackNodes(node.left) + 1)
+    return numBlackNodes(node.left)
+  }
+
+  private int blackHeight (Node node){
+    if (node == null) return -1
+    if (node.left == null) return 0
+    return blackHeight(node.left)+1;
+  }
+
+  private ArrayList<Node> findShortestPath(Node node, ArrayList<Node> nodeList){
+    //compute height of left and right at each spot, then pursue the lower one until you get to null
+    // use height method from BST, and add each node to the nodeList as you go down.
+    ArrayList<Node> nodes = new ArrayList<nodes>;
+    return minHeight(root, nodes);
   }
   
   //This returns the absolute value of the difference between the real height of the tree and its black height. 
   public int trueHeightDiff(){
-	  return 0;
+	  return height(root) - blackHeight(root);
   }
 }
 
